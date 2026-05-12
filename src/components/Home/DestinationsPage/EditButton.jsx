@@ -1,121 +1,186 @@
-"use client";
-import { Envelope } from "@gravity-ui/icons";
-import { Button, FieldError, Input, Label, ListBox, Modal, Surface, TextArea, Select, TextField } from "@heroui/react";
-import { CiEdit } from 'react-icons/ci';
+'use client'
+import { Button, Modal , FieldError, Input, Label, ListBox, Select, TextArea, TextField} from '@heroui/react';
+import React from 'react';
+import { toast } from 'react-toastify';
 
-const EditButton = () => {
+const EditButton = ({detailsData}) => {
+
+
+    const {_id, destinationName, country, price, duration, departureDate, imageUrl, description ,category} = detailsData;
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        // console.log("Form Data:", data);
+
+        const res = await fetch(` http://localhost:5000/destinations/${_id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+        const destinationsData = await res.json();
+
+       if(destinationsData.modifiedCount >0){
+        toast('done')
+       }
+
+
+    };
+
+
+
     return (
         <div>
             <Modal>
-                {/* Trigger Button */}
-                <Button variant="outline" className="flex items-center gap-2">
-                    <CiEdit /> Edit
-                </Button>
+      <Button variant="secondary">edit</Button>
+      <Modal.Backdrop>
+        <Modal.Container>
+          <Modal.Dialog className="sm:max-w-2xl">
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Update Travel Package</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+             <form onSubmit={handleSubmit} className=" p-5 bg-stone-50 space-y-8">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                               {/* Destination Name */}
+                               <div className="md:col-span-2">
+                                   <TextField defaultValue={destinationName} name="destinationName" >
+                                       <Label>Destination Name</Label>
+                                       <Input  className="rounded-2xl" />
+                                       <FieldError />
+                                   </TextField>
+                               </div>
 
-                <Modal.Backdrop>
-                    <Modal.Container placement="center">
-                        <Modal.Dialog className="sm:max-w-2xl">
-                            <Modal.CloseTrigger />
+                               {/* Country */}
+                               <TextField name="country" defaultValue={country}>
+                                   <Label>Country</Label>
+                                   <Input placeholder="Indonesia" className="rounded-2xl" />
+                                   <FieldError />
+                               </TextField>
 
-                            <Modal.Header>
-                                <Modal.Heading className="text-xl font-semibold">Update Travel Package</Modal.Heading>
-                                <p className="text-sm text-gray-500">Make changes to the travel package details below</p>
-                            </Modal.Header>
+                               {/* Category - Updated Select Component */}
+                               <div>
+                                   <Select
+                                   defaultValue={category}
+                                       name="category"
 
-                            <Modal.Body className="p-6">
-                                <form className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                       className="w-full"
+                                       placeholder="Select category"
+                                   >
+                                       <Label>Category</Label>
+                                       <Select.Trigger className="rounded-2xl">
+                                           <Select.Value />
+                                           <Select.Indicator />
+                                       </Select.Trigger>
+                                       <Select.Popover>
+                                           <ListBox>
+                                               <ListBox.Item id="Beach" textValue="Beach">
+                                                   Beach
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                               <ListBox.Item id="Mountain" textValue="Mountain">
+                                                   Mountain
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                               <ListBox.Item id="City" textValue="City">
+                                                   City
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                               <ListBox.Item id="Adventure" textValue="Adventure">
+                                                   Adventure
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                               <ListBox.Item id="Cultural" textValue="Cultural">
+                                                   Cultural
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                               <ListBox.Item id="Luxury" textValue="Luxury">
+                                                   Luxury
+                                                   <ListBox.ItemIndicator />
+                                               </ListBox.Item>
+                                           </ListBox>
+                                       </Select.Popover>
+                                   </Select>
+                               </div>
 
-                                        {/* Destination Name - Full Width */}
-                                        <div className="md:col-span-2">
-                                            <TextField name="destinationName" isRequired className="w-full">
-                                                <Input placeholder="Bali Paradise" className="rounded-md" />
-                                                <FieldError />
-                                            </TextField>
-                                        </div>
+                               {/* Price */}
+                               <TextField defaultValue={price} name="price" type="number" >
+                                   <Label>Price (USD)</Label>
+                                   <Input
+                                       type="number"
+                                       placeholder="1299"
+                                       className="rounded-2xl"
+                                   />
+                                   <FieldError />
+                               </TextField>
 
-                                        {/* Country */}
-                                        <TextField name="country" isRequired>
-                                            <Label>Country</Label>
-                                            <Input placeholder="Indonesia" className="rounded-md" />
-                                            <FieldError />
-                                        </TextField>
+                               {/* Duration */}
+                               <TextField defaultValue='duration' name="duration" >
+                                   <Label>Duration</Label>
+                                   <Input
+                                       placeholder="7 Days / 6 Nights"
+                                       className="rounded-2xl"
+                                   />
+                                   <FieldError />
+                               </TextField>
 
-                                        {/* Category */}
-                                        <div className="flex flex-col gap-2">
-                                            <Label>Category</Label>
-                                            <Select name="category" isRequired placeholder="Select category">
-                                                <Select.Trigger className="rounded-md">
-                                                    <Select.Value />
-                                                    <Select.Indicator />
-                                                </Select.Trigger>
-                                                <Select.Popover>
-                                                    <ListBox>
-                                                        <ListBox.Item id="Beach">Beach</ListBox.Item>
-                                                        <ListBox.Item id="Mountain">Mountain</ListBox.Item>
-                                                        <ListBox.Item id="City">City</ListBox.Item>
-                                                    </ListBox>
-                                                </Select.Popover>
-                                            </Select>
-                                        </div>
+                               {/* Departure Date */}
+                               <div className="md:col-span-2">
+                                   <TextField defaultValue='departureDate' name="departureDate" type="date" >
+                                       <Label>Departure Date</Label>
+                                       <Input type="date" className="rounded-2xl" />
+                                       <FieldError />
+                                   </TextField>
+                               </div>
 
-                                        {/* Price */}
-                                        <TextField name="price" type="number" isRequired>
-                                            <Label>Price (USD)</Label>
-                                            <Input placeholder="e.g., 1299" className="rounded-md" />
-                                            <FieldError />
-                                        </TextField>
+                               {/* Image URL - Removed preview */}
+                               <div className="md:col-span-2">
+                                   <TextField defaultValue={imageUrl} name="imageUrl" >
+                                       <Label>Image URL</Label>
+                                       <Input
+                                           type="url"
 
-                                        {/* Duration */}
-                                        <TextField name="duration" isRequired>
-                                            <Label>Duration</Label>
-                                            <Input placeholder="e.g., 7 Days / 6 Nights" className="rounded-md" />
-                                            <FieldError />
-                                        </TextField>
+                                           className="rounded-2xl"
+                                       />
+                                       <FieldError />
+                                   </TextField>
+                               </div>
 
-                                        {/* Departure Date - Full Width */}
-                                        <div className="md:col-span-2">
-                                            <TextField name="departureDate" type="date" isRequired>
-                                                <Label>Departure Date</Label>
-                                                <Input type="date" className="rounded-md" />
-                                                <FieldError />
-                                            </TextField>
-                                        </div>
+                               {/* Description */}
+                               <div className="md:col-span-2">
+                                   <TextField defaultValue={description} name="description" >
+                                       <Label>Description</Label>
+                                       <TextArea
+                                           placeholder="Describe the travel experience..."
+                                           className="rounded-3xl"
+                                       />
+                                       <FieldError />
+                                   </TextField>
+                               </div>
+                           </div>
 
-                                        {/* Image URL - Full Width */}
-                                        <div className="md:col-span-2">
-                                            <TextField name="imageUrl" isRequired>
-                                                <Label>Image URL</Label>
-                                                <Input type="url" placeholder="https://example.com/image.jpg" className="rounded-md" />
-                                                <FieldError />
-                                            </TextField>
-                                        </div>
+                           {/* Buttons */}
+                           {/* isLoading={isPending} */}
+                           {/* {isPending ? "Adding Package..." : "Add Travel Package"} */}
+                          <Modal.Footer>
+              <Button slot="close" variant="secondary">
+                Cancel
+              </Button>
+              <Button type='submit' slot="close">Save Change</Button>
+            </Modal.Footer>
+                       </form>
+            </Modal.Body>
 
-                                        {/* Description - Full Width */}
-                                        <div className="md:col-span-2">
-                                            <TextField name="description" isRequired>
-                                                <Label>Description</Label>
-                                                <TextArea placeholder="Describe the travel experience..." className="rounded-md min-h-[100px]" />
-                                                <FieldError />
-                                            </TextField>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Buttons */}
-                                    <div className="flex justify-end gap-3 mt-8">
-                                        <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50 rounded-md px-6">
-                                            Cancel
-                                        </Button>
-                                        <Button type="submit" className="bg-cyan-500 text-white hover:bg-cyan-600 rounded-md px-6">
-                                            Save Changes
-                                        </Button>
-                                    </div>
-                                </form>
-                            </Modal.Body>
-                        </Modal.Dialog>
-                    </Modal.Container>
-                </Modal.Backdrop>
-            </Modal>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
+    </Modal>
         </div>
     );
 };

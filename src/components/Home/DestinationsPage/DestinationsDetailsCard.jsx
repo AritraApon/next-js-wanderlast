@@ -10,7 +10,7 @@ const DestinationsDetailsCard = ({ detailsData }) => {
     // Data check korar jonno optional chaining use kora bhalo
     if (!detailsData) return <div className="text-center py-10">Loading...</div>;
 
-    const { destinationName, country, price, duration, departureDate, imageUrl, description } = detailsData;
+    const { destinationName, country, price, duration, departureDate, imageUrl, description ,category} = detailsData;
 
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-8">
@@ -22,8 +22,8 @@ const DestinationsDetailsCard = ({ detailsData }) => {
 
 
                 <div className="flex gap-3">
-                   <EditButton/>
-                  <CancelButton/>
+                   <EditButton detailsData={detailsData} />
+                  <CancelButton detailsData={detailsData}  />
 
 
                 </div>

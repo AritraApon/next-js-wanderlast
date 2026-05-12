@@ -10,7 +10,7 @@ const DestinationsCard = ({ destination }) => {
         <div>
             <div className="border p-3 shadow rounded-lg hover:scale-105 transition duration-300 ">
                 <div>
-                    <Image src={imageUrl} alt={destinationName} width={400} height={300} className="rounded-lg object-cover mx-auto h-60" />
+                    <Image src={imageUrl || "/placeholder.jpg"} alt={destinationName} width={400} height={300} className="rounded-lg object-cover mx-auto h-60" />
 
                 </div>
 

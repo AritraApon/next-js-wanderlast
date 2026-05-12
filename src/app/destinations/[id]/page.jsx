@@ -8,7 +8,7 @@ const DestinationsDetailsPage =async({params}) => {
 
 
     return (
-        <div className='container mx-auto my-20'>
+        <div className='container mx-auto mb-20'>
 
           <div>
       <DestinationsDetailsCard  detailsData={detailsData }  />

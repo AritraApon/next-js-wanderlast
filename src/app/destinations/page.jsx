@@ -6,7 +6,7 @@ const DestinationPage =async () => {
     const data = await destinationsData();
     console.log("Destinations Data:", data);
     return (
-        <div>
+        <div className="container mx-auto">
             <div className="text-center my-10 space-y-3">
                  <h1 className="text-3xl font-bold ">Explore All Destinations</h1>
                  <p>Find your perfect travel experience from our curated collection</p>

@@ -6,18 +6,18 @@ const AddDestinationPage = () => {
 
     // const [isPending, startTransition] = useTransition();
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
         // console.log("Form Data:", data);
 
-        const res = await fetch('http://localhost:5000/destinations',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
+        const res = await fetch('http://localhost:5000/destinations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body:JSON.stringify(data)
+            body: JSON.stringify(data)
         })
 
         const destinationsData = await res.json();

@@ -4,11 +4,11 @@ import { Link } from "@heroui/react";
 
 const DestinationsCard = ({ destination }) => {
 
-    const { destinationName, country, category, price, duration, departureDate, imageUrl, description } = destination;
+    const {_id, destinationName, country, category, price, duration, departureDate, imageUrl, description } = destination;
 
     return (
         <div>
-            <div className="border p-3 shadow rounded-lg hover:scale-105 transition duration-300">
+            <div className="border p-3 shadow rounded-lg hover:scale-105 transition duration-300 ">
                 <div>
                     <Image src={imageUrl} alt={destinationName} width={400} height={300} className="rounded-lg object-cover mx-auto h-60" />
 
@@ -28,7 +28,7 @@ const DestinationsCard = ({ destination }) => {
                         </div>
 
                         <div>
-                            <p> <span className="text-xl font-bold">{price}</span>/person </p>
+                            <p> <span className="text-xl font-bold">${price}</span>/person </p>
                         </div>
                     </div>
 
@@ -36,8 +36,8 @@ const DestinationsCard = ({ destination }) => {
                 </div>
 
                 <div className="mb-3">
-                    <Link href="#" className='text-lg font-semibold text-blue-500'>
-                      Book now
+                    <Link href={`/destinations/${_id}`} className='text-lg font-semibold text-blue-500'>
+                        Book now
                         <Link.Icon />
                     </Link>
                 </div>

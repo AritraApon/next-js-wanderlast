@@ -67,13 +67,9 @@ const Navbar = () => {
                 {/* 4. Desktop Auth Links (Right side) */}
                 <div className="hidden md:block">
                     <ul className="flex items-center gap-6">
-                        {authLinks.map((link) => (
-                            <li key={link.href}>
-                                <Link href={link.href} className={getLinkStyle(link.href)}>
-                                    {link.name}
-                                </Link>
-                            </li>
-                        ))}
+                       <li className={getLinkStyle('/profile')}><Link href="/profile">Profile</Link></li>
+                       <li className={getLinkStyle('/login')}><Link href="/login">LogIn</Link></li>
+                       <li className={getLinkStyle('/singup')}><Link href="/signup"> SingUp</Link></li>
                     </ul>
                 </div>
 

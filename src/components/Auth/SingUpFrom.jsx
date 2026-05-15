@@ -26,9 +26,9 @@ const SingUpFrom = () => {
         password:password, // user password -> min 8 characters by default
         name:name, // user display name
         image:image, // User image URL (optional)
-        callbackURL: "/login" // A URL to redirect to after the user verifies their email (optional)
+        callbackURL: "/" // A URL to redirect to after the user verifies their email (optional)
     })
-   
+
     if(data){
         toast.success('Successfully Sing Up ')
     }

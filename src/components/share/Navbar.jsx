@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react"; // install:
-import { Button } from "@heroui/react";
-import { authClient } from "@/lib/auth-client";
+import { Button, Spinner } from "@heroui/react";
+import { authClient, useSession } from "@/lib/auth-client";
 import { useRouter } from 'next/navigation';
 import { toast } from "react-toastify";
 
@@ -14,6 +14,16 @@ const Navbar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+
+    const { data, isPending } = useSession()
+    if (isPending) {
+        return <div>
+            <div className="flex items-center gap-4">
+                <Spinner />
+            </div>
+        </div>
+    }
+    const user = data?.user;
 
     const handleSignOut = async () => {
         await authClient.signOut({
@@ -29,6 +39,8 @@ const Navbar = () => {
             },
         });
     };
+
+
 
     const getLinkStyle = (path) =>
         pathname === path
@@ -86,14 +98,49 @@ const Navbar = () => {
                 </div>
 
                 {/* 4. Desktop Auth Links (Right side) */}
-                <div className="hidden md:block">
-                    <ul className="flex items-center gap-6">
-                        <li className={getLinkStyle('/profile')}><Link href="/profile">Profile</Link></li>
-                        <li className={getLinkStyle('/login')}><Link href="/login">LogIn</Link></li>
-                        <li className={getLinkStyle('/singup')}><Link href="/signup"> SingUp</Link></li>
-                        <li><Button onClick={handleSignOut} variant="danger-soft">Sing Out</Button></li>
-                    </ul>
+              <div className="hidden md:block">
+    <ul className="flex items-center gap-6">
+        <li className={getLinkStyle('/profile')}>
+            <Link href="/profile">Profile</Link>
+        </li>
+
+        {user ? (
+            // --- User Login Thakle Ei Part Show Korbe ---
+            <li className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                    {/* User Avatar/Image */}
+                    <Image
+                    src={(user?.image && user.image.includes('@') === false) ? user.image : "/avatar.png"}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <span className="font-medium text-sm">Welcome, {user?.name}</span>
                 </div>
+
+                <Button onClick={handleSignOut} variant="danger-soft">
+                    Sign Out
+                </Button>
+
+            </li>
+        ) : (
+            // --- User Login NA Thakle Ei Part Show Korbe ---
+            <>
+                <li className={getLinkStyle('/login')}>
+                    <Link href="/login">LogIn</Link>
+                </li>
+                <li className={getLinkStyle('/signup')}>
+                    <Link href="/signup">Sign Up</Link>
+                </li>
+            </>
+        )}
+    </ul>
+</div>
+
+
+
+
 
                 {/* Mobile Login Icon (Visible only on mobile right side) */}
                 <div className="md:hidden text-sm font-medium text-blue-600">

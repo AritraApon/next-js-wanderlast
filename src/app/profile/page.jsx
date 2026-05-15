@@ -1,11 +1,12 @@
-import React from 'react';
+import ProfilePage from "@/components/ProfilePage/ProfilePage";
 
-const ProfilePage = () => {
+
+const Profile = () => {
     return (
         <div>
-            profile
+            <ProfilePage/>
         </div>
     );
 };
 
-export default ProfilePage;
+export default Profile;

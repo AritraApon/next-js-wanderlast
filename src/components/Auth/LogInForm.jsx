@@ -121,8 +121,7 @@ const LogInForm = () => {
                     </div>
                     {/* Google  */}
                     <div className="">
-                        <button className="flex items-center justify-center gap-3 border
-                      shadow p-3 w-full "><FaGoogle /> Sing in with google</button>
+                        <button className="flex items-center justify-center gap-3 border shadow p-3 w-full "><FaGoogle /> Sing in with google</button>
                     </div>
 
                     <div>

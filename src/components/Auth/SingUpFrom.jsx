@@ -1,16 +1,46 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { Check, EyeSlash } from "@gravity-ui/icons";
 import { Button, Description, FieldError, Form, Input, InputGroup, Label, TextField } from "@heroui/react";
 import { Eye, Icon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 
 const SingUpFrom = () => {
 
     const [isVisible, setIsVisible] = useState(false);
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        const fromData = new FormData(event.target)
+        const userData = Object.fromEntries(fromData.entries())
+
+        const { email, name,image, password } = userData ;
+
+           const { data, error } = await authClient.signUp.email({
+        email:email , // user email address
+        password:password, // user password -> min 8 characters by default
+        name:name, // user display name
+        image:image, // User image URL (optional)
+        callbackURL: "/login" // A URL to redirect to after the user verifies their email (optional)
+    })
+   
+    if(data){
+        toast.success('Successfully Sing Up ')
+    }
+
+    if(error){
+        toast.error(`${error.message}`)
+    }
+
+
+
+    }
+
 
     return (
         <div>
@@ -23,7 +53,7 @@ const SingUpFrom = () => {
 
                 {/* Form Container */}
                 <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-sm border border-gray-100 ">
-                    <Form className="flex w-96 flex-col gap-4" >
+                    <Form onSubmit={onSubmit} className="flex w-96 flex-col gap-4" >
                         {/* name  */}
                         <TextField
                             isRequired
@@ -107,12 +137,12 @@ const SingUpFrom = () => {
                     </div>
                     {/* Google  */}
                     <div className="">
-                     <button className="flex items-center justify-center gap-3 border
-                      shadow p-3 w-full "><FaGoogle/> Sing in with google</button>
+                        <button className="flex items-center justify-center gap-3 border
+                      shadow p-3 w-full "><FaGoogle /> Sing in with google</button>
                     </div>
 
                     <div>
-                        <p className="text-center my-2 ">Already have an account? <span > <Link href={'/login'}  className="text-cyan-500"> Log In</Link>  </span></p>
+                        <p className="text-center my-2 ">Already have an account? <span > <Link href={'/login'} className="text-cyan-500"> Log In</Link>  </span></p>
                     </div>
 
                 </div>

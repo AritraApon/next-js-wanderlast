@@ -4,10 +4,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react"; // install:
+import { Button } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
+
 
 const Navbar = () => {
+    const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    // This will now work because 'router' is from 'next/navigation'
+                    router.push("/login");
+                    router.refresh(); // Optional: clears any cached server data
+                },
+                onError: (ctx) => {
+                    toast.error(ctx.error.message); // Good for debugging
+                }
+            },
+        });
+    };
 
     const getLinkStyle = (path) =>
         pathname === path
@@ -67,9 +88,10 @@ const Navbar = () => {
                 {/* 4. Desktop Auth Links (Right side) */}
                 <div className="hidden md:block">
                     <ul className="flex items-center gap-6">
-                       <li className={getLinkStyle('/profile')}><Link href="/profile">Profile</Link></li>
-                       <li className={getLinkStyle('/login')}><Link href="/login">LogIn</Link></li>
-                       <li className={getLinkStyle('/singup')}><Link href="/signup"> SingUp</Link></li>
+                        <li className={getLinkStyle('/profile')}><Link href="/profile">Profile</Link></li>
+                        <li className={getLinkStyle('/login')}><Link href="/login">LogIn</Link></li>
+                        <li className={getLinkStyle('/singup')}><Link href="/signup"> SingUp</Link></li>
+                        <li><Button onClick={handleSignOut} variant="danger-soft">Sing Out</Button></li>
                     </ul>
                 </div>
 

@@ -1,14 +1,56 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { Check, EyeSlash } from "@gravity-ui/icons";
 import { Button, Description, FieldError, Form, Input, InputGroup, Label, TextField } from "@heroui/react";
-import { Eye,  } from "lucide-react";
+import { Eye, } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 
 const LogInForm = () => {
- const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        const fromData = new FormData(event.target)
+        const userData = Object.fromEntries(fromData.entries())
+
+        const { email, name, image, password } = userData;
+
+        const { data, error } = await authClient.signIn.email({
+            /**
+             * The user email
+             */
+            email:email,
+            /**
+             * The user password
+             */
+            password:password,
+            /**
+             * A URL to redirect to after the user verifies their email (optional)
+             */
+            callbackURL: "/",
+            /**
+             * remember the user session after the browser is closed.
+             * @default true
+             */
+            rememberMe: false
+        })
+
+        console.log(data)
+
+        if (data) {
+            toast.success('Successfully Login ')
+        }
+
+        if (error) {
+            toast.error(`${error.message}`)
+        }
+
+
+
+    }
 
     return (
         <div>
@@ -21,7 +63,7 @@ const LogInForm = () => {
 
                 {/* Form Container */}
                 <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-                    <Form className="flex w-96 flex-col gap-4" >
+                    <Form onSubmit={onSubmit} className="flex w-96 flex-col gap-4" >
 
                         {/* email  */}
                         <TextField
@@ -84,7 +126,7 @@ const LogInForm = () => {
                     </div>
 
                     <div>
-                        <p className="text-center my-2 ">Don't have an account? <span > <Link href={'/singup'} className="text-cyan-500"> Sing Up</Link>  </span></p>
+                        <p className="text-center my-2 ">Don't have an account? <span > <Link href={'/signup'} className="text-cyan-500"> Sing Up</Link>  </span></p>
                     </div>
 
                 </div>
